@@ -2,6 +2,18 @@ import { model, Schema, Document } from 'mongoose';
 import { User } from '../interfaces/users.interface';
 
 const userSchema: Schema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: Number,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -10,9 +22,8 @@ const userSchema: Schema = new Schema({
   password: {
     type: String,
     required: true,
-    select: false
+    select: false,
   },
-  
 });
 
 const userModel = model<User & Document>('User', userSchema);

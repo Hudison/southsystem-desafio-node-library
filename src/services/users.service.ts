@@ -35,8 +35,13 @@ class UserService {
   public async updateUser(userId: string, userData: User): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
-    const updateUserById: User = await this.users.findByIdAndUpdate(userId, { ...userData, password: hashedPassword });
+    const findUser: User = await this.users.findOne({ email: userData.email });
+    if (findUser) throw new HttpException(409, `Email ${userData.email} already exists`);
+    
+    const hashedPassword = userData.password ? await bcrypt.hash(userData.password, 10) : null;
+
+    const updateUserById: User = await this.users.findByIdAndUpdate(userId, userData.password ? { ...userData, password: hashedPassword } : userData);
+
     if (!updateUserById) throw new HttpException(409, "You're not user");
 
     return updateUserById;

@@ -3,6 +3,8 @@ tags:
   description: users API
 - name: auth
   description: auth API
+- name: books
+  description: books API
 paths:
 # [GET] users
   /users:
@@ -112,7 +114,7 @@ paths:
         description: user Data
         required: true
         schema:
-          $ref: '#/definitions/users'
+          $ref: '#/definitions/auth'
       responses:
         200:
           description: 'OK'
@@ -126,7 +128,7 @@ paths:
     post:
       tags:
       - auth
-      summary: Login      
+      summary: Logout      
       responses:
         200:
           description: 'OK'
@@ -135,24 +137,164 @@ paths:
         409:
           description: 'Conflict'
         500:
-          description: 'Server Error'          
+          description: 'Server Error'         
+  /books:
+      get:
+        tags:
+        - books
+        summary: Find All Books
+        responses:
+          200:
+            description: 'OK'
+          500:
+            description: 'Server Error'
+
+  # [POST] books
+      post:
+        tags:
+        - books
+        summary: Add Book
+        parameters:
+        - name: body
+          in: body
+          description: book Data
+          required: true
+          schema:
+            $ref: '#/definitions/books'
+        responses:
+          201:
+            description: 'Created'
+          400:
+            description: 'Bad Request'
+          409:
+            description: 'Conflict'
+          500:
+          description: 'Server Error'
+
+# [GET] books/id
+  /books/{id}:
+    get:
+      tags:
+      - books
+      summary: Find Book By Id
+      parameters:
+      - name: id
+        in: path
+        description: Book Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [PUT] books/id
+    put:
+      tags:
+      - books
+      summary: Update Book By Id
+      parameters:
+      - name: id
+        in: path
+        description: book Id
+        required: true
+      - name: body
+        in: body
+        description: book Data
+        required: true
+        schema:
+          $ref: '#/definitions/books'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
+
+# [DELETE] books/id
+    delete:
+      tags:
+      - books
+      summary: Delete Book By Id
+      parameters:
+      - name: id
+        in: path
+        description: book Id
+        required: true
+      responses:
+        200:
+          description: 'OK'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error' 
 # definitions
 definitions:
+  auth:
+    type: object
+    required:
+          - email
+          - password
+    properties:
+      email:
+          type: string
+          description: user Email
+      password:
+        type: string
+        description: user Password
   users:
     type: object
     required:
         - email
         - password
+        - age
+        - phone
+        - name
     properties:
       id:
         description: user Id
+      name: 
+        type: string
+        description: user Name
+      age: 
+        type: number
+        description: user Age
+      phone: 
+        type: string
+        description: user Phone
       email:
         type: string
         description: user Email
       password:
         type: string
         description: user Password
-
+  books:
+      type: object
+      required:
+          - title
+          - isbn
+          - year
+          - category
+      properties:
+        id:
+          description: book Id
+        title: 
+          type: string
+          description: book Title
+        isbn: 
+          type: string
+          description: book ISBN
+        year: 
+          type: string
+          description: book Release year
+        category:
+          type: string
+          description: book Category
 schemes:
  - https
  - http
