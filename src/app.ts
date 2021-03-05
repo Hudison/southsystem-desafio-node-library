@@ -80,9 +80,9 @@ class App {
     const options = {
       swaggerDefinition: {
         info: {
-          title: 'REST API',
+          title: 'Lirary API',
           version: '1.0.0',
-          description: 'Example docs',
+          description: 'Example docs C:',
         },
       },
       apis: ['swagger.yaml'],
