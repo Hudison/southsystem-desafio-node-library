@@ -24,6 +24,9 @@ const userSchema: Schema = new Schema({
     required: true,
     select: false,
   },
+  favoriteBooks: [{
+    type: Schema.Types.ObjectId, ref: 'Book'
+  }]
 });
 
 const userModel = model<User & Document>('User', userSchema);

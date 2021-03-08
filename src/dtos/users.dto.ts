@@ -1,4 +1,5 @@
 import { IsEmail, IsPhoneNumber, IsPositive, IsNotEmpty, IsString } from 'class-validator';
+import { Book } from '../interfaces/books.interface';
 
 export class CreateUserDto {
   @IsEmail()
@@ -17,4 +18,6 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   public password: string;
+
+  public favoriteBooks: Book[];
 }

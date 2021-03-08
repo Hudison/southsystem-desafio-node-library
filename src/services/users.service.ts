@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { CreateUserDto } from '../dtos/users.dto';
 import HttpException from '../exceptions/HttpException';
+import { Book } from '../interfaces/books.interface';
 import { User } from '../interfaces/users.interface';
 import userModel from '../models/users.model';
 import { isEmpty } from '../utils/util';
@@ -14,7 +15,7 @@ class UserService {
   }
 
   public async findUserById(userId: string): Promise<User> {
-    const findUser: User = await this.users.findOne({ _id: userId });
+    const findUser: User = await this.users.findOne({ _id: userId }).populate('favoriteBooks');
     if (!findUser) throw new HttpException(409, "You're not user");
 
     return findUser;
@@ -36,8 +37,8 @@ class UserService {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const findUser: User = await this.users.findOne({ email: userData.email });
-    if (findUser) throw new HttpException(409, `Email ${userData.email} already exists`);
-    
+    if (findUser && findUser.email !== userData.email) throw new HttpException(409, `Email ${userData.email} already exists`);
+
     const hashedPassword = userData.password ? await bcrypt.hash(userData.password, 10) : null;
 
     const updateUserById: User = await this.users.findByIdAndUpdate(userId, userData.password ? { ...userData, password: hashedPassword } : userData);
@@ -52,6 +53,14 @@ class UserService {
     if (!deleteUserById) throw new HttpException(409, "You're not user");
 
     return deleteUserById;
+  }
+
+  public async updateFavoriteBooks(userId: string, books: Book[]): Promise<User> {
+    const findUser = await this.users.findOne({ _id: userId });
+    if (!findUser) throw new HttpException(409, "You're not user");
+    findUser.favoriteBooks = books;
+    await findUser.save();
+    return findUser;
   }
 }
 

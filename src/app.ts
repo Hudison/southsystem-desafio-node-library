@@ -12,7 +12,6 @@ import { dbConnection } from './database';
 import Routes from './interfaces/routes.interface';
 import errorMiddleware from './middlewares/error.middleware';
 import { logger, stream } from './utils/logger';
-
 class App {
   public app: express.Application;
   public port: string | number;
@@ -40,17 +39,17 @@ class App {
     return this.app;
   }
 
-  private connectToDatabase() {
-    if (this.env !== 'production') {
-      set('debug', true);
+  private async connectToDatabase() {
+    try {
+      if (this.env !== 'production') {
+        set('debug', true);
+      }
+
+      await connect(dbConnection.url, dbConnection.options);
+      logger.info('The database is connected.');
+    } catch (error) {
+      logger.error(`Unable to connect to the database: ${error}.`);
     }
-    connect(dbConnection.url, dbConnection.options)
-      .then(() => {
-        logger.info('The database is connected.');
-      })
-      .catch((error: Error) => {
-        logger.error(`Unable to connect to the database: ${error}.`);
-      });
   }
 
   private initializeMiddlewares() {
@@ -59,7 +58,7 @@ class App {
       this.app.use(cors({ origin: 'domain.com', credentials: true }));
     } else if (this.env === 'development') {
       this.app.use(morgan('dev', { stream }));
-      this.app.use(cors({ origin: true, credentials: true }));
+      this.app.use(cors({ origin: '*', credentials: true }));
     }
 
     this.app.use(hpp());
@@ -82,7 +81,7 @@ class App {
         info: {
           title: 'Lirary API',
           version: '1.0.0',
-          description: 'Example docs C:',
+          description: 'Library API routes.',
         },
       },
       apis: ['swagger.yaml'],

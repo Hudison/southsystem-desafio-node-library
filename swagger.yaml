@@ -5,6 +5,8 @@ tags:
   description: auth API
 - name: books
   description: books API
+
+
 paths:
 # [GET] users
   /users:
@@ -102,6 +104,32 @@ paths:
           description: 'Conflict'
         500:
           description: 'Server Error'
+# [PUT] users/id
+  /users/books{id}:
+    put:
+      tags:
+      - users
+      summary: Update User favorite books
+      parameters:
+      - name: id
+        in: path
+        description: user Id
+        required: true
+      - name: body
+        in: body
+        description: books
+        required: true
+        schema:
+          $ref: '#/definitions/booksIdArray'
+      responses:
+        200:
+          description: 'OK'
+        400:
+          description: 'Bad Request'
+        409:
+          description: 'Conflict'
+        500:
+          description: 'Server Error'
 # [POST] /login
   /login:
     post:
@@ -124,6 +152,7 @@ paths:
           description: 'Conflict'
         500:
           description: 'Server Error'
+# [POST] /logout
   /logout:
     post:
       tags:
@@ -295,6 +324,16 @@ definitions:
         category:
           type: string
           description: book Category
+  booksIdArray:
+      type: array
+      items:
+        type: object
+        required:
+          - _id
+        properties:
+          _id:
+            type: string
+            description: book Id
 schemes:
  - https
  - http

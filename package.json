@@ -1,7 +1,7 @@
 {
-  "name": "southsystem-desafio-node-library",
+  "name": "southsystem-desafio-node-library-server",
   "version": "1.0.0",
-  "description": "Desafio SouthSystem node library",
+  "description": "Desafio SouthSystem node library Server",
   "author": "Hudison Souza",
   "license": "MIT",
   "scripts": {

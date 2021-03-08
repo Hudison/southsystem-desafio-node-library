@@ -7,7 +7,6 @@ import userModel from '../models/users.model';
 const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
     const cookies = req.cookies;
-
     if (cookies && cookies.Authorization) {
       const secret = process.env.JWT_SECRET;
       const verificationResponse = (await jwt.verify(cookies.Authorization, secret)) as DataStoredInToken;
@@ -24,7 +23,7 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
       next(new HttpException(401, 'Authentication token missing'));
     }
   } catch (error) {
-    next(new HttpException(401, 'Wrong authentication token'));
+    next(new HttpException(500, 'Wrong authentication token'));
   }
 };
 
