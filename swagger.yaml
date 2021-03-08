@@ -105,7 +105,7 @@ paths:
         500:
           description: 'Server Error'
 # [PUT] users/id
-  /users/books{id}:
+  /users/books/{id}:
     put:
       tags:
       - users
